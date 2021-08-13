@@ -6,12 +6,23 @@ using Comet;
 using LibVLCSharp.Shared;
 using LocalPlex;
 
-[assembly: CometGenerate(typeof(IMoviePlayerView), nameof(IMoviePlayerView.MediaSource))]
+[assembly: CometGenerate(typeof(IMoviePlayerView))]
 
 namespace LocalPlex
 {
 	public partial class MoviePlayerView : View
 	{
+
+		public MoviePlayerView(string source)
+		{
+			if (!string.IsNullOrWhiteSpace(source))
+			{
+				var view = (IMoviePlayerView)this;
+				view.MediaPlayer ??= new(LibVLC);
+				view.MediaPlayer.Media = new Media(LibVLC, new Uri(source));
+				view.MediaPlayer.Play();
+			}
+		}
 		static MoviePlayerView()
 		{
 			Core.Initialize();
@@ -25,8 +36,8 @@ namespace LocalPlex
 			if(property == nameof(IMoviePlayerView.MediaSource))
 			{
 				var view  = (IMoviePlayerView)this;
-				view.MediaPlayer ??= new MediaPlayer(LibVLC);
-				view.MediaPlayer.Media = new Media(LibVLC,new Uri(this.MediaSource.CurrentValue));
+				view.MediaPlayer ??= new (LibVLC);
+				//view.MediaPlayer.Media = new Media(LibVLC,new Uri(this.MediaSource.CurrentValue));
 			}
 		}
 	}

@@ -24,7 +24,7 @@ namespace LocalPlex
 				hubSections.Value?.Any() ?? false ?
 				new ListView<Hub>(()=>hubSections.Value){
 					ViewFor = (hub) => {
-						return new Text(hub.Title);
+						return new VStack{ new Text(hub.Title).Background(Colors.White).Color(Colors.Black) }.Frame(height:44);
 					},
 					ItemSelected = async (hub) =>
 					{

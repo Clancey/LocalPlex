@@ -24,9 +24,11 @@ namespace LocalPlex
 					new Image(()=>item.Thumb),
 					new Text(()=>item.Title),
 				}.Frame(height:66),
-				ItemSelected = (mediaItem) =>
+				ItemSelected = (o) =>
 				{
-					this.Navigate(new MoviePlayerView(()=> $"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
+					var mediaItem = o as Metadata;
+					var part = mediaItem.Media.FirstOrDefault()?.Part.First();
+					this.Navigate(new MoviePlayerView( $"http://192.168.1.14:32400{part.Key}"));
 				}
 			} : new ActivityIndicator();
 		}

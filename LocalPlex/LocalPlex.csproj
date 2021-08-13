@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<!-- iOS, Android, MacCatalyst -->
@@ -20,7 +20,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Clancey.Comet" Version="0.3.65-beta" />
+		<PackageReference Include="Clancey.Comet" Version="0.3.66-beta" />
 		<PackageReference Include="Reloadify3000" Version="1.0.7" />
     	<PackageReference Include="Clancey.SimpleAuth" Version="1.0.56" />
 		<PackageReference Include="System.Net.Http" Version="4.3.4" />
