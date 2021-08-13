@@ -8,29 +8,39 @@ using Comet;
 
 namespace LocalPlex
 {
-	public partial class CometRide 
-	{
-		[AutoNotify]
-		int rides;
-
-		public string CometTrain => "☄️".Repeat(Rides);
-	}
-
-	public class MainPage : View
+	public partial class MainPage : View
 	{
 
-		[State]
-		readonly CometRide comet = new();
+		readonly State<List<Hub>> hubSections = new List<Hub>();
+		readonly State<bool> IsLoading = false;
+		[Environment("CurrentServer")]
+		readonly PlexServer Server;
 
 		[Body]
 		View body()
 			=> new VStack {
-				new Text(()=> $"{comet.CometTrain}")   
-					.Frame(width:300)
-					.LineBreakMode(LineBreakMode.CharacterWrap),
-
-				new Button("Ride the Comet! ☄️", ()=>{
-					comet.Rides++;
+				new Text(""),
+				IsLoading ? new ActivityIndicator() : 
+				hubSections.Value?.Any() ?? false ?
+				new ListView<Hub>(()=>hubSections.Value){
+					ViewFor = (hub) => {
+						return new Text(hub.Title);
+					},
+					ItemSelected = async (hub) =>
+					{
+						this.Navigate(new HubListView().SetEnvironment("CurrentHub",hub));
+					}
+				
+				}.Background(Colors.DarkGray) : 
+				new Button("Ride the Comet! ☄️", async ()=>{
+					try{
+						IsLoading.Value = true;
+						var hub = await Server.GetHubData();
+						hubSections.Value = hub.Hub.ToList();
+					}
+					finally{
+						IsLoading.Value = false;
+					}
 				})
 					.Frame(height:44)
 					.Margin(8)
@@ -38,7 +48,9 @@ namespace LocalPlex
 					.Background(Colors.Green)
 				.RoundedBorder(color:Colors.Blue)
 				.Shadow(Colors.Grey,4,2,2),
+				
 			};
+		
 	}
 }
 
